@@ -5,5 +5,5 @@
     <artifactId>travelgift</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>travelgift-common</artifactId>
+  <artifactId>travelgift-wechart</artifactId>
 </project>
