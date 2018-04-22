@@ -1,4 +1,4 @@
-package net.uchoice.vote.controller;
+package net.uchoice.travelgift.vote.controller;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageHelper;
 
-import net.uchoice.vote.entity.Article;
-import net.uchoice.vote.service.ArticleService;
+import net.uchoice.travelgift.vote.entity.Article;
+import net.uchoice.travelgift.vote.service.ArticleService;
 
 @RestController
 @RequestMapping("/article")

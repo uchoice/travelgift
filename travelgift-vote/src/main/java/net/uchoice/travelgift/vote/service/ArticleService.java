@@ -1,8 +1,8 @@
-package net.uchoice.vote.service;
+package net.uchoice.travelgift.vote.service;
 
 import java.util.List;
 
-import net.uchoice.vote.entity.Article;
+import net.uchoice.travelgift.vote.entity.Article;
 
 public interface ArticleService {
 

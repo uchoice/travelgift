@@ -1,12 +1,12 @@
-package net.uchoice.vote.service.impl;
+package net.uchoice.travelgift.vote.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.uchoice.vote.dao.UserMapper;
-import net.uchoice.vote.entity.User;
-import net.uchoice.vote.service.UserService;
+import net.uchoice.travelgift.vote.dao.UserMapper;
+import net.uchoice.travelgift.vote.entity.User;
+import net.uchoice.travelgift.vote.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {

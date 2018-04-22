@@ -1,10 +1,10 @@
-package net.uchoice.vote.dao;
+package net.uchoice.travelgift.vote.dao;
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import net.uchoice.vote.entity.Article;
+import net.uchoice.travelgift.vote.entity.Article;
 
 @Mapper
 public interface ArticleMapper {

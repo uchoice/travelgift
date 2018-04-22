@@ -1,4 +1,4 @@
-package net.uchoice.vote.entity;
+package net.uchoice.travelgift.vote.entity;
 
 import java.io.Serializable;
 import java.util.Date;

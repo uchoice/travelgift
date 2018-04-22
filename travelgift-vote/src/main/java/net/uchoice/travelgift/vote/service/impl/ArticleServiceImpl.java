@@ -1,4 +1,4 @@
-package net.uchoice.vote.service.impl;
+package net.uchoice.travelgift.vote.service.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.uchoice.vote.dao.ArticleImageMapper;
-import net.uchoice.vote.dao.ArticleMapper;
-import net.uchoice.vote.dao.VoteHisMapper;
-import net.uchoice.vote.entity.Article;
-import net.uchoice.vote.entity.ArticleImage;
-import net.uchoice.vote.entity.VoteHis;
-import net.uchoice.vote.service.ArticleService;
+import net.uchoice.travelgift.vote.dao.ArticleImageMapper;
+import net.uchoice.travelgift.vote.dao.ArticleMapper;
+import net.uchoice.travelgift.vote.dao.VoteHisMapper;
+import net.uchoice.travelgift.vote.entity.Article;
+import net.uchoice.travelgift.vote.entity.ArticleImage;
+import net.uchoice.travelgift.vote.entity.VoteHis;
+import net.uchoice.travelgift.vote.service.ArticleService;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {

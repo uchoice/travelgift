@@ -1,6 +1,6 @@
-package net.uchoice.vote.service;
+package net.uchoice.travelgift.vote.service;
 
-import net.uchoice.vote.entity.User;
+import net.uchoice.travelgift.vote.entity.User;
 
 public interface UserService {
 	
