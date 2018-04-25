@@ -31,6 +31,17 @@
 			<artifactId>travelgift-wechart</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		
+		<dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+        </dependency>
+
+		<dependency>
+			<artifactId>travelgift-vote</artifactId>
+			<groupId>net.uchoice</groupId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>travelgift</finalName>

@@ -4,64 +4,117 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.uchoice.travelgift.vote.dao.ArticleImageMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.uchoice.travelgift.vote.common.Const;
 import net.uchoice.travelgift.vote.dao.ArticleMapper;
 import net.uchoice.travelgift.vote.dao.VoteHisMapper;
 import net.uchoice.travelgift.vote.entity.Article;
-import net.uchoice.travelgift.vote.entity.ArticleImage;
 import net.uchoice.travelgift.vote.entity.VoteHis;
 import net.uchoice.travelgift.vote.service.ArticleService;
+import net.uchoice.travelgift.vote.util.DateUtils;
+import net.uchoice.travelgift.vote.vo.ArticleDetail;
+import net.uchoice.travelgift.vote.vo.ArticleVo;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
+	
+	private static final Logger log = LoggerFactory.getLogger(ArticleServiceImpl.class);
 
 	@Autowired
 	private ArticleMapper articleMapper;
 
 	@Autowired
 	private VoteHisMapper voteHisMapper;
-
+	
 	@Autowired
-	private ArticleImageMapper articleImageMapper;
+	private ObjectMapper om;
 
 	@Override
-	public List<Article> findAll() {
-		return articleMapper.selectAll();
+	public List<ArticleVo> findAll() {
+		Article article = new Article();
+		article.setStatus(Const.AUDIT_PASS);
+		return articleMapper.select(article).stream().map(a -> new ArticleVo(a)).collect(Collectors.toList());
 	}
-	
-	public Article get(Integer id) {
-		return articleMapper.selectByPrimaryKey(id);
+
+	public ArticleDetail getArticle(Integer id, String userId) {
+		return new ArticleDetail(new ArticleVo(articleMapper.selectByPrimaryKey(id)),
+				voteHisMapper.selectCount(userId, id, DateUtils.todayZeroOclock()) == 0);
 	}
 
 	@Transactional
-	public void addArticle(Article article) {
-		article.setCreateDate(new Date());
-		articleMapper.insert(article);
-		if (article.getImages() != null && !article.getImages().isEmpty()) {
-			List<ArticleImage> images = article.getImages().stream().map(r -> {
-				ArticleImage image = new ArticleImage();
-				image.setImage(r);
-				image.setArticleId(article.getId());
-				image.setCreateBy(article.getCreateBy());
-				image.setCreateDate(article.getCreateDate());
-				return image;
-			}).collect(Collectors.toList());
-			articleImageMapper.batchInsert(images);
+	public boolean addArticle(ArticleVo articleVo) {
+		Article article = new Article();
+		Date d = new Date();
+		article.setCreateDate(d);
+		article.setUpdateDate(d);
+		article.setVotes(0);
+		article.setStatus(Const.AUDIT_ING);
+		article.setTitle(articleVo.getTitle());
+		try {
+			article.setContent(om.writeValueAsString(articleVo.getContent()));
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e.getMessage(), e);
 		}
+		article.setAuthor(articleVo.getAuthor());
+		article.setCrowd(articleVo.getCrowd());
+		article.setScene(articleVo.getScene());
+		return articleMapper.insert(article) > 0;
 	}
 
 	@Transactional
-	public void vote(int articleId, String userId) {
+	public boolean vote(int articleId, String userId) {
+		int count = voteHisMapper.selectCount(userId, articleId, DateUtils.todayZeroOclock());
+		if (count > 0) {
+			return false;
+		}
 		VoteHis voteHis = new VoteHis();
 		voteHis.setArticleId(articleId);
 		voteHis.setUserId(userId);
-		voteHis.setVoteDate(new Date());
+		Date d = new Date();
+		voteHis.setVoteDate(d);
+		voteHis.setCreateDate(d);
 		voteHisMapper.insert(voteHis);
-		articleMapper.updateVotes(articleId, 1);
+		return articleMapper.updateVotes(articleId, 1) > 0;
+	}
+
+	@Override
+	public List<ArticleVo> find(String userId) {
+		Article article = new Article();
+		article.setAuthor(userId);
+		return articleMapper.select(article).stream().map(a -> new ArticleVo(a)).collect(Collectors.toList());
+	}
+
+	@Transactional
+	public boolean updateArticle(ArticleVo articleVo) {
+		Article article = articleMapper.selectByPrimaryKey(articleVo.getId());
+		if(article.getAuthor().equals(articleVo.getAuthor())) {
+			log.warn("Illegal Request: {} want to update article: {} of {}",  articleVo.getAuthor(), article.getId(), article.getAuthor());
+			return false;
+		}
+		article.setTitle(articleVo.getTitle());
+		try {
+			article.setContent(om.writeValueAsString(articleVo.getContent()));
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e.getMessage(), e);
+		}
+		article.setCrowd(articleVo.getCrowd());
+		article.setScene(articleVo.getScene());
+		article.setUpdateDate(new Date());
+		article.setStatus(Const.AUDIT_ING);
+		return articleMapper.updateByPrimaryKey(article) > 0;
+	}
+
+	@Transactional
+	public boolean audit(int articleId, int status) {
+		return articleMapper.updateStatus(articleId, status) > 0;
 	}
 
 }
