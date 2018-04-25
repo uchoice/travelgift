@@ -2,7 +2,7 @@ package net.uchoice.travelgift.vote.service;
 
 import java.util.List;
 
-import net.uchoice.travelgift.vote.entity.Article;
+import net.uchoice.travelgift.vote.vo.ArticleDetail;
 import net.uchoice.travelgift.vote.vo.ArticleVo;
 
 public interface ArticleService {
@@ -11,14 +11,14 @@ public interface ArticleService {
 
 	List<ArticleVo> find(String userId);
 
-	boolean addArticle(Article article);
+	boolean addArticle(ArticleVo articleVo);
 
-	boolean updateArticle(Article article);
+	boolean updateArticle(ArticleVo articleVo);
 
 	boolean vote(int articleId, String userId);
 
 	boolean audit(int articleId, int status);
 
-	ArticleVo get(Integer id);
+	ArticleDetail getArticle(Integer id, String userId);
 
 }

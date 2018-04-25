@@ -11,18 +11,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
-import net.uchoice.travelgift.vote.entity.Article;
 import net.uchoice.travelgift.vote.intercepter.AuthFilter;
 import net.uchoice.travelgift.vote.service.ArticleService;
+import net.uchoice.travelgift.vote.vo.ArticleDetail;
 import net.uchoice.travelgift.vote.vo.ArticleVo;
 import net.uchoice.travelgift.vote.vo.PageVo;
 
@@ -34,9 +33,10 @@ public class ArticleController {
 	private ArticleService articleService;
 
 	@GetMapping("/list")
-	public PageVo<ArticleVo> list(@RequestParam(defaultValue = "5") int size,
-			@RequestParam(defaultValue = "1") int pageNo) {
+	public PageVo<ArticleVo> list(@RequestParam(defaultValue = "10") int size,
+			@RequestParam int pageNo) {
 		try {
+			pageNo = pageNo == 0 ? 1 : pageNo;
 			Page<ArticleVo> page = PageHelper.startPage(pageNo, size);
 			PageHelper.orderBy("votes desc");
 			List<ArticleVo> results = articleService.findAll();
@@ -49,9 +49,10 @@ public class ArticleController {
 	}
 
 	@GetMapping("/mylist")
-	public PageVo<ArticleVo> mylist(@RequestParam(defaultValue = "5") int size,
-			@RequestParam(defaultValue = "1") int pageNo, @SessionAttribute(AuthFilter.KEY) String userId) {
+	public PageVo<ArticleVo> mylist(@RequestParam(defaultValue = "10") int size,
+			@RequestParam int pageNo, @RequestHeader(name = AuthFilter.AUTH_KEY) String userId) {
 		try {
+			pageNo = pageNo == 0 ? 1 : pageNo;
 			Page<ArticleVo> page = PageHelper.startPage(pageNo, size);
 			PageHelper.orderBy("votes desc");
 			List<ArticleVo> results = articleService.find(userId);
@@ -63,43 +64,38 @@ public class ArticleController {
 		}
 	}
 
-	@GetMapping("/get/{id}")
-	public ArticleVo get(@PathVariable("id") int id) {
-		return articleService.get(id);
+	@GetMapping("/detail/{id}")
+	public ArticleDetail detail(@PathVariable("id") int id,
+			 @RequestHeader(name = AuthFilter.AUTH_KEY) String openId) {
+		return articleService.getArticle(id, openId);
 	}
 
 	@RequestMapping("/vote")
-	public boolean vote(int id, @SessionAttribute(AuthFilter.KEY) String userId) {
-		return articleService.vote(id, userId);
+	public boolean vote(@RequestParam int id, @RequestHeader(name = AuthFilter.AUTH_KEY) String openId) {
+		return articleService.vote(id, openId);
 	}
 
 	@PostMapping("/publish")
-	public boolean publish(@RequestBody @Valid Article article, BindingResult bindingResult) {
+	public boolean publish(@RequestBody @Valid ArticleVo articleVo, BindingResult bindingResult,
+			@RequestHeader(name = AuthFilter.AUTH_KEY) String openId) {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidParameterException(errMsg(bindingResult));
 		}
-		try {
-			JSONUtils.parse(article.getContent());
-		} catch (Exception e) {
-			throw new InvalidParameterException("参数错误：内容格式错误");
-		}
-		return articleService.addArticle(article);
+		articleVo.setAuthor(openId);
+		return articleService.addArticle(articleVo);
 	}
 
 	@PostMapping("/update")
-	public boolean update(@RequestBody @Valid Article article, BindingResult bindingResult) {
+	public boolean update(@RequestBody @Valid ArticleVo articleVo, BindingResult bindingResult
+			, @RequestHeader(name = AuthFilter.AUTH_KEY) String openId) {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidParameterException(errMsg(bindingResult));
 		}
-		if (article.getId() == null) {
+		if (articleVo.getId() == null) {
 			throw new InvalidParameterException("参数错误：没有文章ID");
 		}
-		try {
-			JSONUtils.parse(article.getContent());
-		} catch (Exception e) {
-			throw new InvalidParameterException("参数错误：内容格式错误");
-		}
-		return articleService.updateArticle(article);
+		articleVo.setAuthor(openId);
+		return articleService.updateArticle(articleVo);
 	}
 
 	private String errMsg(BindingResult bindingResult) {

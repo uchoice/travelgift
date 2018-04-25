@@ -69,7 +69,8 @@
     -->
     select count(id)
     from t_vote_his
-    where user_id = #{0,jdbcType=VARCHAR} AND
-      vote_date = #{1,jdbcType=TIMESTAMP}
+    where user_id = #{arg0,jdbcType=VARCHAR} AND
+      article_id = #{arg1,jdbcType=INTEGER} AND
+      vote_date = #{arg2,jdbcType=TIMESTAMP}
   </select>
 </mapper>
