@@ -74,8 +74,9 @@
 		</plugins>
 	</build>
 	<modules>
-		<!-- <module>travelgift-vote</module> -->
+		<module>travelgift-vote</module>
 		<module>travelgift-booter</module>
 		<module>travelgift-wechart</module>
+		<module>travelgift-user</module>
 	</modules>
 </project>

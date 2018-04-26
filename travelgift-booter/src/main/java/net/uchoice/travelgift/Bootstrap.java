@@ -11,7 +11,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication
 @ServletComponentScan
-@MapperScan("net.uchoice.travelgift.vote.dao")
+@MapperScan({"net.uchoice.travelgift.vote.dao", "net.uchoice.travelgift.user.dao"})
 @EnableAutoConfiguration(exclude = { JpaRepositoriesAutoConfiguration.class // 禁止springboot自动加载持久化bean
 })
 public class Bootstrap extends SpringBootServletInitializer {

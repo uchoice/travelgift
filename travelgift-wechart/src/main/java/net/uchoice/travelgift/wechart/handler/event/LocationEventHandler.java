@@ -39,9 +39,9 @@ public class LocationEventHandler implements MessageHandler {
 
 	@Override
 	public void preHandle(InputMessage message) {
-		log.info(String.format("[LOCATION] t[%s] u[%s] lon[%s] lat[%s] scale[%s]",
-				DateUtils.dateFormat(new Date()), message.getFromUserName(),
-				message.getLocation_X(), message.getLocation_Y(), String.valueOf(message.getScale())));
+		log.info(String.format("[LOCATION] t[%s] u[%s] lon[%s] lat[%s] p[%s]", DateUtils.dateFormat(new Date()),
+				message.getFromUserName(), message.getLongitude(), message.getLatitude(),
+				String.valueOf(message.getPrecision())));
 	}
 
 	@Override

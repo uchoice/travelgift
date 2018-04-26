@@ -34,8 +34,6 @@ public class InputMessage implements Serializable {
 	private String Location_X;
 	@XStreamAlias("Location_Y")
 	private String Location_Y;
-	@XStreamAlias("Precision")
-	private Double Precision;
 	@XStreamAlias("Scale")
 	private Long Scale;
 	@XStreamAlias("Label")
@@ -61,6 +59,13 @@ public class InputMessage implements Serializable {
 	private String EventKey;
 	@XStreamAlias("Ticket")
 	private String Ticket;
+	// 位置事件
+	@XStreamAlias("Latitude")
+	private String Latitude;
+	@XStreamAlias("Longitude")
+	private String Longitude;
+	@XStreamAlias("Precision")
+	private Double Precision;
 
 	public String getToUserName() {
 		return ToUserName;
@@ -228,6 +233,22 @@ public class InputMessage implements Serializable {
 
 	public void setScale(Long scale) {
 		Scale = scale;
+	}
+
+	public String getLatitude() {
+		return Latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		Latitude = latitude;
+	}
+
+	public String getLongitude() {
+		return Longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		Longitude = longitude;
 	}
 
 	public <T extends BaseMessage> T transfer(Class<T> cls) {
