@@ -22,3 +22,8 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     # 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
+    
+#微信配置
+wechart:
+  appId: wx07f9401307a023bd
+  token: uchoice2018
