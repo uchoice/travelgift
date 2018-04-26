@@ -47,6 +47,10 @@ public class ArticleServiceImpl implements ArticleService {
 
 	public ArticleDetail getArticle(Integer id, String userId) {
 		Article article = articleMapper.selectByPrimaryKey(id);
+		if(article == null) {
+			throw new ForbiddenRequestException(
+					"user: " + userId + " cannot view unexists article: " + id);
+		}
 		if (article.getStatus() != Const.AUDIT_PASS && !userId.equals(article.getAuthor())) {
 			throw new ForbiddenRequestException(
 					"user: " + userId + " cannot view unAudit article: " + id + " of user: " + article.getAuthor());
