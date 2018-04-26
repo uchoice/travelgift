@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 
@@ -15,6 +16,7 @@ import net.uchoice.travelgift.user.exception.UserServiceException;
 import net.uchoice.travelgift.user.service.UserService;
 import net.uchoice.travelgift.wechart.handler.MessageHandler;
 import net.uchoice.travelgift.wechart.model.request.InputMessage;
+import net.uchoice.travelgift.wechart.model.response.Article;
 import net.uchoice.travelgift.wechart.model.response.BaseMessage;
 import net.uchoice.travelgift.wechart.model.response.NewsMessage;
 import net.uchoice.travelgift.wechart.util.DateUtils;
@@ -60,6 +62,15 @@ public class CommonMessageHandler implements MessageHandler {
 		msg.setCreateTime(System.currentTimeMillis());
 		msg.setArticleCount(msg.getArticles().size());
 		msg.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_NEWS);
+		// 替换通配符
+		if (msg.getArticleCount() > 0) {
+			for (Article article : msg.getArticles()) {
+				if (!StringUtils.isEmpty(article.getUrl())) {
+					String url = article.getUrl().replaceAll("${UserId}", message.getFromUserName());
+					article.setUrl(url);
+				}
+			}
+		}
 		return msg;
 	}
 
