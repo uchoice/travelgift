@@ -66,7 +66,7 @@ public class CommonMessageHandler implements MessageHandler {
 		if (msg.getArticleCount() > 0) {
 			for (Article article : msg.getArticles()) {
 				if (!StringUtils.isEmpty(article.getUrl())) {
-					String url = article.getUrl().replaceAll("${UserId}", message.getFromUserName());
+					String url = article.getUrl().replaceAll("[[UserId]]", message.getFromUserName());
 					article.setUrl(url);
 				}
 			}
