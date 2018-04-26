@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author yangxiaobin
@@ -29,30 +28,17 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler
 	public Object businessExceptionHandler(Exception exception, HttpServletRequest req) {
 		logger.error("[INTERNAL_SERVER_ERROR]", exception);
-		if (isAjax(req)) {
-			ResponseEntity<String> response;
-			if (exception instanceof InvalidParameterException) {
-				response = new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-			} else if (exception instanceof HttpRequestMethodNotSupportedException) {
-				response = new ResponseEntity<String>(exception.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
-			} else {
-				response = new ResponseEntity<String>("服务器异常", HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-			return response;
+		ResponseEntity<String> response;
+		if (exception instanceof InvalidParameterException) {
+			response = new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+		} else if (exception instanceof HttpRequestMethodNotSupportedException) {
+			response = new ResponseEntity<String>(exception.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
+		} else if (exception instanceof ForbiddenRequestException) {
+			response = new ResponseEntity<String>(exception.getMessage(), HttpStatus.FORBIDDEN);
 		} else {
-			ModelAndView modelAndView = new ModelAndView();
-			modelAndView.addObject("detailMessage", exception.getMessage());
-			modelAndView.addObject("url", req.getRequestURL());
-			if (exception instanceof InvalidParameterException) {
-				modelAndView.addObject("status", 400);
-			} else if (exception instanceof HttpRequestMethodNotSupportedException) {
-				modelAndView.addObject("status", 405);
-			} else {
-				modelAndView.addObject("status", 500);
-			}
-			modelAndView.setViewName("error");
-			return modelAndView;
+			response = new ResponseEntity<String>("服务器异常", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		return response;
 	}
 
 	/**

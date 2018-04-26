@@ -18,6 +18,7 @@ import net.uchoice.travelgift.vote.dao.ArticleMapper;
 import net.uchoice.travelgift.vote.dao.VoteHisMapper;
 import net.uchoice.travelgift.vote.entity.Article;
 import net.uchoice.travelgift.vote.entity.VoteHis;
+import net.uchoice.travelgift.vote.exception.ForbiddenRequestException;
 import net.uchoice.travelgift.vote.service.ArticleService;
 import net.uchoice.travelgift.vote.util.DateUtils;
 import net.uchoice.travelgift.vote.vo.ArticleDetail;
@@ -25,7 +26,7 @@ import net.uchoice.travelgift.vote.vo.ArticleVo;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(ArticleServiceImpl.class);
 
 	@Autowired
@@ -33,7 +34,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Autowired
 	private VoteHisMapper voteHisMapper;
-	
+
 	@Autowired
 	private ObjectMapper om;
 
@@ -45,7 +46,12 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	public ArticleDetail getArticle(Integer id, String userId) {
-		return new ArticleDetail(new ArticleVo(articleMapper.selectByPrimaryKey(id)),
+		Article article = articleMapper.selectByPrimaryKey(id);
+		if (article.getStatus() != Const.AUDIT_PASS && !userId.equals(article.getAuthor())) {
+			throw new ForbiddenRequestException(
+					"user: " + userId + " cannot view unAudit article: " + id + " of user: " + article.getAuthor());
+		}
+		return new ArticleDetail(new ArticleVo(article),
 				voteHisMapper.selectCount(userId, id, DateUtils.todayZeroOclock()) == 0);
 	}
 
@@ -73,7 +79,11 @@ public class ArticleServiceImpl implements ArticleService {
 	public boolean vote(int articleId, String userId) {
 		int count = voteHisMapper.selectCount(userId, articleId, DateUtils.todayZeroOclock());
 		if (count > 0) {
-			return false;
+			throw new ForbiddenRequestException("user: " + userId + " has voted: " + articleId + " today");
+		}
+		Article article = articleMapper.selectByPrimaryKey(articleId);
+		if(article.getStatus() != Const.AUDIT_PASS) {
+			throw new ForbiddenRequestException("user: " + userId + " cannot vote article: " + article.getId() + " of user: " + article.getAuthor());
 		}
 		VoteHis voteHis = new VoteHis();
 		voteHis.setArticleId(articleId);
@@ -95,8 +105,9 @@ public class ArticleServiceImpl implements ArticleService {
 	@Transactional
 	public boolean updateArticle(ArticleVo articleVo) {
 		Article article = articleMapper.selectByPrimaryKey(articleVo.getId());
-		if(!article.getAuthor().equals(articleVo.getAuthor())) {
-			log.warn("Illegal Request: {} want to update article: {} of {}",  articleVo.getAuthor(), article.getId(), article.getAuthor());
+		if (!article.getAuthor().equals(articleVo.getAuthor())) {
+			log.warn("Illegal Request: {} want to update article: {} of {}", articleVo.getAuthor(), article.getId(),
+					article.getAuthor());
 			return false;
 		}
 		article.setTitle(articleVo.getTitle());
