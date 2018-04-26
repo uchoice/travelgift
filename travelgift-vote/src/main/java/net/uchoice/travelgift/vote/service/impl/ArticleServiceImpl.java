@@ -95,7 +95,7 @@ public class ArticleServiceImpl implements ArticleService {
 	@Transactional
 	public boolean updateArticle(ArticleVo articleVo) {
 		Article article = articleMapper.selectByPrimaryKey(articleVo.getId());
-		if(article.getAuthor().equals(articleVo.getAuthor())) {
+		if(!article.getAuthor().equals(articleVo.getAuthor())) {
 			log.warn("Illegal Request: {} want to update article: {} of {}",  articleVo.getAuthor(), article.getId(), article.getAuthor());
 			return false;
 		}
