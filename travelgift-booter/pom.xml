@@ -5,6 +5,7 @@
 		<groupId>net.uchoice</groupId>
 		<artifactId>travelgift</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>travelgift-booter</artifactId>
 	<packaging>war</packaging>
@@ -52,6 +53,9 @@
 				<configuration>
 					<!--如果想在没有web.xml文件的情况下构建WAR，请设置为false。 -->
 					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<packagingExcludes>  
+	                    WEB-INF/classes/application.yml
+	                </packagingExcludes>  
 				</configuration>
 			</plugin>
 			<plugin>

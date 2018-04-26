@@ -85,7 +85,7 @@
 
 	<build>
 		<plugins>
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.mybatis.generator</groupId>
 				<artifactId>mybatis-generator-maven-plugin</artifactId>
 				<version>1.3.5</version>
@@ -98,7 +98,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<!-- generator 工具配置文件的位置 -->
+					generator 工具配置文件的位置
 					<configurationFile>src/main/resources/mybatis-generator/generatorConfig.xml</configurationFile>
 					<verbose>true</verbose>
 					<overwrite>true</overwrite>
@@ -115,7 +115,7 @@
 						<version>1.3.2</version>
 					</dependency>
 				</dependencies>
-			</plugin>
+			</plugin> -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
