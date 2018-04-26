@@ -2,7 +2,6 @@ package net.uchoice.travelgift.wechart.handler.event;
 
 import java.util.Date;
 
-import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Component;
 import net.uchoice.travelgift.wechart.handler.MessageHandler;
 import net.uchoice.travelgift.wechart.model.request.InputMessage;
 import net.uchoice.travelgift.wechart.model.response.BaseMessage;
+import net.uchoice.travelgift.wechart.util.DateUtils;
 import net.uchoice.travelgift.wechart.util.MessageUtil;
 
 /**
@@ -25,8 +25,8 @@ public class SubscribeEventHandler implements MessageHandler {
 
 	@Override
 	public boolean isEffect(InputMessage message) {
-		if (MessageUtil.REQ_MESSAGE_TYPE_EVENT.equals(message.getMsgType())
-				&& MessageUtil.EVENT_TYPE_SUBSCRIBE.equals(message.getEvent())) {
+		if (MessageUtil.REQ_MESSAGE_TYPE_EVENT.equalsIgnoreCase(message.getMsgType())
+				&& MessageUtil.EVENT_TYPE_SUBSCRIBE.equalsIgnoreCase(message.getEvent())) {
 			return true;
 		}
 		return false;
@@ -39,7 +39,7 @@ public class SubscribeEventHandler implements MessageHandler {
 
 	@Override
 	public void preHandle(InputMessage message) {
-		log.info(String.format("[Subscribe] t[%s] u[%s]", DateUtils.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"),
+		log.info(String.format("[Subscribe] t[%s] u[%s]", DateUtils.dateFormat(new Date()),
 				message.getFromUserName()));
 	}
 

@@ -12,6 +12,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import com.alibaba.fastjson.JSON;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -19,9 +20,8 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 
-import net.uchoice.travelgift.wechart.model.response.Article;
+import net.uchoice.travelgift.wechart.model.request.InputMessage;
 import net.uchoice.travelgift.wechart.model.response.BaseMessage;
-import net.uchoice.travelgift.wechart.model.response.NewsMessage;
 
 public class MessageUtil {
 	// 请求消息类型：文本
@@ -149,25 +149,9 @@ public class MessageUtil {
 	}
 
 	public static void main(String[] args) {
-		NewsMessage msg = new NewsMessage();
-		msg.setFromUserName("fu");
-		msg.setToUserName("tu");
-		
-		Article a1 = new Article();
-		a1.setDescription("d1");
-		a1.setPicUrl("pc1");
-		a1.setTitle("t1");
-		a1.setUrl("u1");
-		msg.addArticle(a1);
-		
-		Article a2 = new Article();
-		a2.setDescription("d12");
-		a2.setPicUrl("pc12");
-		a2.setTitle("t12");
-		a2.setUrl("u12");
-		msg.addArticle(a2);
-		
-		System.out.println(messageToXml(msg));
+		String xml = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]></FromUserName><CreateTime>123456789</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[LOCATION]]></Event><Location_Y>23.137466</Location_Y><Location_X>113.352425</Location_X><Precision>119.385040</Precision></xml>";
+		InputMessage msg = xmlToBean(xml, InputMessage.class);
+		System.out.println(JSON.toJSONString(msg, true));
 	}
 
 }

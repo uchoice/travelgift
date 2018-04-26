@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+	<!-- <property name="logback.env" value="dev"></property> -->
+	
+    <property name="LOG_HOME" value="${logback.file.path:-/data/applog/travelgift}"/>
+    <property name="PROJECT_NAME" value="${logback.appName:-travelgift}"/>
+    <property name="MAX_LOG_FILE_SIZE" value="200mb"/>
+    <property name="MAX_FILES" value="${logback.maxFiles:-10}"/>
+    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [${LOG_LEVEL_PATTERN:-%5p}] | [%-22.22t{22}] | %-40.40logger{39} | %msg%n"/>
+    <property name="BIZ_LOG_PATTERN" value="%msg%n"/>
+
+    <appender name="CONSOLE_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="APP_INFO_APPENDER"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+        <file>${LOG_HOME}/${PROJECT_NAME}-info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${PROJECT_NAME}-info.log-%i.zip</fileNamePattern>
+            <maxIndex>${MAX_FILES}</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>${MAX_LOG_FILE_SIZE}</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+    
+    <appender name="APP_ERROR_APPENDER"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+        <file>${LOG_HOME}/${PROJECT_NAME}-error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${PROJECT_NAME}-error.log-%i.zip</fileNamePattern>
+            <maxIndex>${MAX_FILES}</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>${MAX_LOG_FILE_SIZE}</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <appender name="APP_TRACE_APPENDER"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${BIZ_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+        <file>${LOG_HOME}/${PROJECT_NAME}-trace.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${PROJECT_NAME}-trace.log-%i.zip</fileNamePattern>
+            <maxIndex>${MAX_FILES}</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>${MAX_LOG_FILE_SIZE}</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+    
+    <appender name="APP_SUBSCRIBE_APPENDER"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${BIZ_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+        <file>${LOG_HOME}/${PROJECT_NAME}-subscribe.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${PROJECT_NAME}-subscribe.log-%i.zip</fileNamePattern>
+            <maxIndex>${MAX_FILES}</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>${MAX_LOG_FILE_SIZE}</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+    
+    <appender name="APP_LOCATION_APPENDER"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${BIZ_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+        <file>${LOG_HOME}/${PROJECT_NAME}-location.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${PROJECT_NAME}-location.log-%i.zip</fileNamePattern>
+            <maxIndex>${MAX_FILES}</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>${MAX_LOG_FILE_SIZE}</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <if condition='isDefined("logback.env")'>
+        <then>
+            <if condition='property("logback.env").contains("dev")'>
+                <then>
+                    <logger name="net.uchoice" level="DEBUG"/>
+                </then>
+            </if>
+        </then>
+    </if>
+    
+    <logger name="net.uchoice.travelgift.wechart.handler.event.LocationEventHandler" level="INFO" additivity="false">
+        <appender-ref ref="APP_LOCATION_APPENDER"/>
+    </logger>
+    
+    <logger name="net.uchoice.travelgift.wechart.handler.message.CommonMessageHandler" level="INFO" additivity="false">
+        <appender-ref ref="APP_TRACE_APPENDER"/>
+    </logger>
+    
+    <logger name="net.uchoice.travelgift.wechart.handler.event.SubscribeEventHandler" level="INFO" additivity="false">
+        <appender-ref ref="APP_SUBSCRIBE_APPENDER"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="APP_INFO_APPENDER"/>
+        <appender-ref ref="APP_ERROR_APPENDER"/>
+        <if condition='isDefined("logback.env")'>
+            <then>
+                <if condition='property("logback.env").contains("dev")'>
+                    <then>
+                        <appender-ref ref="CONSOLE_APPENDER"/>
+                    </then>
+                </if>
+            </then>
+        </if>
+    </root>
+
+</configuration>
