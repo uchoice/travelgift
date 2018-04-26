@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -30,6 +31,8 @@ public class GlobalExceptionHandler {
 		logger.error("[INTERNAL_SERVER_ERROR]", exception);
 		ResponseEntity<String> response;
 		if (exception instanceof InvalidParameterException) {
+			response = new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+		} else if (exception instanceof MissingServletRequestParameterException) {
 			response = new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 		} else if (exception instanceof HttpRequestMethodNotSupportedException) {
 			response = new ResponseEntity<String>(exception.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
