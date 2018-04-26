@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="true">
-	<property name="logback.env" value="dev"></property>
+	<!-- <property name="logback.env" value="dev"></property> -->
 	
     <property name="LOG_HOME" value="${logback.file.path:-/data/applog/travelgift}"/>
     <property name="PROJECT_NAME" value="${logback.appName:-travelgift}"/>
