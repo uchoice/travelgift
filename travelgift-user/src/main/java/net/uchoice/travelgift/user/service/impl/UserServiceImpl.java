@@ -3,6 +3,7 @@
  */
 package net.uchoice.travelgift.user.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,8 @@ import net.uchoice.travelgift.user.service.UserService;
  */
 @Service("userService")
 public class UserServiceImpl implements UserService {
+	
+	private static List<String> cachedUserOpenIds = new ArrayList<String>();
 
 	@Autowired
 	UserMapper userMapper;
@@ -41,6 +44,7 @@ public class UserServiceImpl implements UserService {
 			user.setGmtModified(new Date());
 			user.setIsDeleted(0);
 			userMapper.insert(user);
+			cachedUserOpenIds.add(user.getOpenId());
 		}
 	}
 
@@ -53,6 +57,9 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public boolean checkExistsByOpenId(String openId) {
+		if(!StringUtils.isEmpty(openId) && cachedUserOpenIds.contains(openId)) {
+			return true;
+		}
 		return null != getUserByOpenId(openId);
 	}
 

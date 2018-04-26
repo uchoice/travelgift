@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias("xml")
 public class BaseMessage implements Serializable {
 
 	/**

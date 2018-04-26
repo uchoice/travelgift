@@ -9,6 +9,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,9 +26,12 @@ import net.uchoice.travelgift.wechart.util.SignUtil;
 @RestController
 @RequestMapping("/wechart")
 public class GatewayController {
-	
+
 	@Autowired
 	MessageManager messageManager;
+
+	@Value("${wechart.portal}")
+	String portal;
 
 	private static final Logger log = LoggerFactory.getLogger(GatewayController.class);
 
@@ -47,7 +51,7 @@ public class GatewayController {
 			String xml = IOUtils.toString(request.getInputStream(), "UTF-8");
 			InputMessage message = MessageUtil.xmlToBean(xml, InputMessage.class);
 			response = MessageUtil.messageToXml(messageManager.process(message));
-			if(null == response) {
+			if (null == response) {
 				log.error(String.format("message handle result null. [%s]", JSON.toJSONString(message)));
 				response = "";
 			}
