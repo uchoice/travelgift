@@ -4,8 +4,12 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import net.uchoice.travelgift.user.domain.UserDO;
+import net.uchoice.travelgift.user.exception.UserServiceException;
+import net.uchoice.travelgift.user.service.UserService;
 import net.uchoice.travelgift.wechart.handler.MessageHandler;
 import net.uchoice.travelgift.wechart.model.request.InputMessage;
 import net.uchoice.travelgift.wechart.model.response.BaseMessage;
@@ -23,6 +27,9 @@ public class SubscribeEventHandler implements MessageHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(SubscribeEventHandler.class);
 
+	@Autowired
+	UserService userService;
+
 	@Override
 	public boolean isEffect(InputMessage message) {
 		if (MessageUtil.REQ_MESSAGE_TYPE_EVENT.equalsIgnoreCase(message.getMsgType())
@@ -39,8 +46,7 @@ public class SubscribeEventHandler implements MessageHandler {
 
 	@Override
 	public void preHandle(InputMessage message) {
-		log.info(String.format("[Subscribe] t[%s] u[%s]", DateUtils.dateFormat(new Date()),
-				message.getFromUserName()));
+		log.info(String.format("[Subscribe] t[%s] u[%s]", DateUtils.dateFormat(new Date()), message.getFromUserName()));
 	}
 
 	@Override
@@ -50,7 +56,16 @@ public class SubscribeEventHandler implements MessageHandler {
 
 	@Override
 	public void postHandle(InputMessage message) {
-
+		String openId = message.getFromUserName();
+		UserDO user = new UserDO();
+		user.setOpenId(openId);
+		if (!userService.checkExistsByOpenId(openId)) {
+			try {
+				userService.addUser(user);
+			} catch (UserServiceException e) {
+				log.error(e.getMessage(), e);
+			}
+		}
 	}
 
 }
