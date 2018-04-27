@@ -38,6 +38,8 @@ public class GlobalExceptionHandler {
 			response = new ResponseEntity<String>(exception.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
 		} else if (exception instanceof ForbiddenRequestException) {
 			response = new ResponseEntity<String>(exception.getMessage(), HttpStatus.FORBIDDEN);
+		} else if (exception instanceof ArticleNotExistsException) {
+			response = new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 		} else {
 			response = new ResponseEntity<String>("服务器异常", HttpStatus.INTERNAL_SERVER_ERROR);
 		}

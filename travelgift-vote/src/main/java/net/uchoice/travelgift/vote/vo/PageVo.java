@@ -1,5 +1,6 @@
 package net.uchoice.travelgift.vote.vo;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.github.pagehelper.Page;
@@ -66,6 +67,16 @@ public class PageVo<T> {
 	public void setData(List<T> data) {
 		this.data = data;
 	}
+	
+	public static final <E> PageVo<E> emptyPage() {
+		PageVo<E> page = new PageVo<>();
+		page.setData(Collections.emptyList());
+		page.setPageNo(0);
+		page.setPageSize(0);
+		page.setTotalCount(0L);
+		page.setTotalPage(0);
+        return (PageVo<E>) page;
+    }
 
 
 }

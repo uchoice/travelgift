@@ -8,17 +8,15 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.annotation.Order;
 import org.springframework.util.StringUtils;
 
-@Order(1)
-@WebFilter(filterName = "authFilter", urlPatterns = "/vote/*")
+//@Order(1)
+//@WebFilter(filterName = "authFilter", urlPatterns = "/vote/*")
 public class AuthFilter implements Filter {
 
 	public static final String AUTH_KEY = "authorization";

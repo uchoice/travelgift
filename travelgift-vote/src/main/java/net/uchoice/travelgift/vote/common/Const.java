@@ -13,6 +13,6 @@ public final class Const {
 	/**
 	 * 审核不通过
 	 */
-	public static final int AUDIT_FAIL = 2;
+	public static final int AUDIT_UNPASS = 2;
 
 }
