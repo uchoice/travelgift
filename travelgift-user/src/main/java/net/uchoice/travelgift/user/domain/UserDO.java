@@ -29,6 +29,8 @@ public class UserDO extends BaseDO implements Serializable {
 	/** 微信id  **/
 	private String openId;
 	
+	private Integer isAdmin;
+	
 	public String getUserNick() {
 		return userNick;
 	}
@@ -67,5 +69,13 @@ public class UserDO extends BaseDO implements Serializable {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	public Integer getIsAdmin() {
+		return isAdmin;
+	}
+
+	public void setIsAdmin(Integer isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 }

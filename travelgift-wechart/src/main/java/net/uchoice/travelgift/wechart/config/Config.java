@@ -13,11 +13,15 @@ public class Config {
 	@Value("${wechart.token}")
 	private String token;
 
+	@Value("${wechart.appSecret}")
+	private String appSecret;
+
 	@Bean
 	public GlobalConfig globalConfig() {
 		GlobalConfig config = new GlobalConfig();
 		config.setAppId(appId);
 		config.setToken(token);
+		config.setAppScret(appSecret);
 		return config;
 	}
 }

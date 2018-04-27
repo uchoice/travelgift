@@ -3,6 +3,9 @@ package net.uchoice.travelgift.wechart.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Formatter;
+
+import net.uchoice.travelgift.wechart.api.JsTicket;
 
 public class SignUtil {
 
@@ -43,6 +46,22 @@ public class SignUtil {
 
 	}
 
+	public static String signature(String noncestr, String timestamp, String url) throws NoSuchAlgorithmException {
+		String string = "jsapi_ticket=" + JsTicket.get().ticket() + "&noncestr=" + noncestr + "×tamp=" + timestamp
+				+ "&url=" + url;
+
+		// 启动sha1加密法的工具
+		MessageDigest md = null;
+		String tmpStr = null;
+		md = MessageDigest.getInstance("SHA-1");
+		// md.digest()方法必须作用于字节数组
+		byte[] digest = md.digest(string.getBytes());
+		// 将字节数组弄成字符串
+		tmpStr = byteToHex(digest);
+		return tmpStr;
+
+	}
+
 	/**
 	 * 将字节加工然后转化成字符串
 	 * 
@@ -76,5 +95,15 @@ public class SignUtil {
 		// 得到进制码的字符串
 		String s = new String(tempArr);
 		return s;
+	}
+
+	private static String byteToHex(final byte[] hash) {
+		Formatter formatter = new Formatter();
+		for (byte b : hash) {
+			formatter.format("%02x", b);
+		}
+		String result = formatter.toString();
+		formatter.close();
+		return result;
 	}
 }

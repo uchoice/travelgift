@@ -2,6 +2,9 @@ package net.uchoice.travelgift.wechart.controller;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -59,5 +62,19 @@ public class GatewayController {
 			log.error(e.getMessage(), e);
 		}
 		return response;
+	}
+
+	@RequestMapping(value = "/sign")
+	public String sign(@RequestParam("url") String url) throws NoSuchAlgorithmException {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String noncestr = UUID.randomUUID().toString();
+		long timestamp = System.currentTimeMillis();
+
+		result.put("appId", GlobalConfig.getAppId());
+		result.put("noncestr", noncestr);
+		result.put("timestamp", timestamp);
+		result.put("signature", SignUtil.signature(noncestr, String.valueOf(timestamp), url));
+
+		return JSON.toJSONString(result);
 	}
 }

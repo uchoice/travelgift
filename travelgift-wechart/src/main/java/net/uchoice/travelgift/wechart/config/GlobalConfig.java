@@ -7,6 +7,8 @@ public class GlobalConfig {
 	private String appId;
 	
 	private String token;
+	
+	private String appScret;
 
 	public static String getAppId() {
 		return config.appId;
@@ -22,5 +24,13 @@ public class GlobalConfig {
 
 	public void setToken(String token) {
 		config.token = token;
+	}
+
+	public static String getAppScret() {
+		return config.appScret;
+	}
+
+	public void setAppScret(String appScret) {
+		config.appScret = appScret;
 	}
 }
