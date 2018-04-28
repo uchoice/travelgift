@@ -29,3 +29,4 @@ wechart:
   token: uchoice2018
   appSecret: bdcd2c6b06aa2d22e0e3e729ca5c34a0
   portal: <xml><Articles><item><Title><![CDATA[欢迎来到礼游记]]></Title> <Description><![CDATA[欢迎来到礼游记，在这里可以发现更多乐趣]]></Description><PicUrl><![CDATA[https://mmbiz.qpic.cn/mmbiz_jpg/zMOic5iahb0u0MwGwP0CBl6WOsxmY9DcxV865w9fSVOdA5PzzRgtyFNsbQiauviaAvHTW6gvdJ3RmQib6CgUtxeQn8Q/0?wx_fmt=jpeg]]></PicUrl><Url><![CDATA[http://www.baidu.com]]></Url></item><item><Title><![CDATA[五一活动 | 礼游送好礼]]></Title><Description><![CDATA[五一出游随手拍，精彩礼品等你拿]]></Description><PicUrl><![CDATA[https://mmbiz.qpic.cn/mmbiz_png/zMOic5iahb0u0MwGwP0CBl6WOsxmY9DcxVMRRrFATvt8SiaCKJibH7D7xSrcjgF6icgUoWhLDFKA6UoDN2zhVKUMicmA/0?wx_fmt=png]]></PicUrl><Url><![CDATA[https://mmbiz.qpic.cn/mmbiz_png/zMOic5iahb0u0MwGwP0CBl6WOsxmY9DcxV53Ria7JHZMPqPtIokTgpEw6aex4A4p265dQGptcj8xOgp7sYoEkLcBA/0?wx_fmt=png]]></Url></item></Articles></xml>
+  adminUrl: http://gift.u-choice.net/home/index?openid=%UserId%

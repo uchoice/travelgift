@@ -34,6 +34,9 @@ public class VoteAuditMessageHandler implements MessageHandler {
 
 	@Value("${wechart.portal}")
 	String portal;
+	
+	@Value("${wechart.adminUrl}")
+	String adminUrl;
 
 	@Autowired
 	ArticleService articleService;
@@ -73,9 +76,8 @@ public class VoteAuditMessageHandler implements MessageHandler {
 			UserDO user = userService.getUserByOpenId(message.getFromUserName());
 			if(user != null && 1 == user.getIsAdmin()) {
 				txt = message.transfer(TextMessage.class);
+				txt.setContent(adminUrl.replaceAll("%UserId%", message.getFromUserName()));
 			}
-			
-			txt.setContent("");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -87,15 +89,4 @@ public class VoteAuditMessageHandler implements MessageHandler {
 
 	}
 
-	public boolean isNumeric(String str) {
-		if (StringUtils.isEmpty(str)) {
-			return false;
-		}
-		for (int i = 0; i < str.length(); i++) {
-			if (!Character.isDigit(str.charAt(i))) {
-				return false;
-			}
-		}
-		return true;
-	}
 }
