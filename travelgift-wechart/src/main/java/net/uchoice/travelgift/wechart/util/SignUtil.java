@@ -47,7 +47,7 @@ public class SignUtil {
 	}
 
 	public static String signature(String noncestr, String timestamp, String url) throws NoSuchAlgorithmException {
-		String string = "jsapi_ticket=" + JsTicket.get().ticket() + "&noncestr=" + noncestr + "×tamp=" + timestamp
+		String string = "jsapi_ticket=" + JsTicket.get().ticket() + "&noncestr=" + noncestr + "&timestamp=" + timestamp
 				+ "&url=" + url;
 
 		// 启动sha1加密法的工具

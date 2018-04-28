@@ -68,7 +68,7 @@ public class GatewayController {
 	public String sign(@RequestParam("url") String url) throws NoSuchAlgorithmException {
 		Map<String, Object> result = new HashMap<String, Object>();
 		String noncestr = UUID.randomUUID().toString();
-		long timestamp = System.currentTimeMillis();
+		long timestamp = System.currentTimeMillis() / 1000;
 
 		result.put("appId", GlobalConfig.getAppId());
 		result.put("noncestr", noncestr);
