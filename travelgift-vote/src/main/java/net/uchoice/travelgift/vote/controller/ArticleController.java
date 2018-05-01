@@ -85,8 +85,8 @@ public class ArticleController {
 		}
 	}
 
-	@GetMapping("/unauditlist")
-	public PageVo<ArticleVo> unauditlist(@RequestParam(defaultValue = "10") int size,
+	@GetMapping("/auditlist")
+	public PageVo<ArticleVo> auditlist(@RequestParam(defaultValue = "10") int size,
 			@RequestParam(defaultValue = "1") int pageNo,
 			@RequestHeader(name = AUTH_KEY, required = false) String userId) {
 		if (StringUtils.isEmpty(userId)) {
@@ -146,13 +146,13 @@ public class ArticleController {
 		return articleService.updateArticle(articleVo);
 	}
 
-	@PostMapping("/audit/pass")
-	public boolean pass(int id, @RequestHeader(name = AUTH_KEY, required = false) String openId) {
+	@RequestMapping("/audit/pass")
+	public boolean pass(@RequestParam int id, @RequestHeader(name = AUTH_KEY, required = false) String openId) {
 		return articleService.audit(id, Const.AUDIT_PASS, openId);
 	}
 
-	@PostMapping("/audit/unpass")
-	public boolean unpass(int id, @RequestHeader(name = AUTH_KEY, required = false) String openId) {
+	@RequestMapping("/audit/unpass")
+	public boolean unpass(@RequestParam int id, @RequestHeader(name = AUTH_KEY, required = false) String openId) {
 		return articleService.audit(id, Const.AUDIT_UNPASS, openId);
 	}
 

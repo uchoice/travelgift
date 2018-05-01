@@ -57,14 +57,17 @@ public class ArticleServiceImpl implements ArticleService {
 		if (article == null) {
 			throw new ArticleNotExistsException("user: " + userId + ", notExists article: " + id);
 		}
-		if (article.getStatus() != Const.AUDIT_PASS && !userId.equals(article.getAuthor())) {
-			throw new ForbiddenRequestException(
-					"user: " + userId + " cannot view unAudit article: " + id + " of user: " + article.getAuthor());
-		}
 		boolean canVote;
 		if (StringUtils.isEmpty(userId)) {
 			canVote = true;
 		} else {
+			UserDO userDO = userService.getUserByOpenId(userId);
+			if(userDO != null && userDO.getIsAdmin() == 1) {
+				
+			} else if (article.getStatus() != Const.AUDIT_PASS && !userId.equals(article.getAuthor())) {
+				throw new ForbiddenRequestException(
+						"user: " + userId + " cannot view unAudit article: " + id + " of user: " + article.getAuthor());
+			}
 			canVote = voteHisMapper.selectCount(userId, id, DateUtils.todayZeroOclock()) == 0;
 		}
 		return new ArticleDetail(new ArticleVo(article), canVote);
@@ -84,12 +87,12 @@ public class ArticleServiceImpl implements ArticleService {
 		article.setTitle(articleVo.getTitle());
 		try {
 			article.setContent(om.writeValueAsString(articleVo.getContent()));
+			article.setCrowd(om.writeValueAsString(articleVo.getCrowds()));
+			article.setScene(om.writeValueAsString(articleVo.getScenes()));
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
 		article.setAuthor(articleVo.getAuthor());
-		article.setCrowd(articleVo.getCrowd());
-		article.setScene(articleVo.getScene());
 		return articleMapper.insert(article) > 0;
 	}
 
@@ -143,11 +146,11 @@ public class ArticleServiceImpl implements ArticleService {
 		article.setTitle(articleVo.getTitle());
 		try {
 			article.setContent(om.writeValueAsString(articleVo.getContent()));
+			article.setCrowd(om.writeValueAsString(articleVo.getCrowds()));
+			article.setScene(om.writeValueAsString(articleVo.getScenes()));
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
-		article.setCrowd(articleVo.getCrowd());
-		article.setScene(articleVo.getScene());
 		article.setUpdateDate(new Date());
 		article.setStatus(Const.AUDIT_ING);
 		return articleMapper.updateByPrimaryKey(article) > 0;

@@ -34,9 +34,9 @@ public class MessageManagerImpl implements MessageManager, ApplicationContextAwa
 				@Override
 				public int compare(MessageHandler o1, MessageHandler o2) {
 					if (o1.priority() >= o2.priority()) {
-						return 1;
-					} else {
 						return -1;
+					} else {
+						return 1;
 					}
 				}
 			});

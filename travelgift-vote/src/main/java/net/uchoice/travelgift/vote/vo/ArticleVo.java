@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import net.uchoice.travelgift.vote.entity.Article;
+import net.uchoice.travelgift.vote.util.JsonUtils;
 
 public class ArticleVo implements Serializable {
 	
@@ -17,9 +17,9 @@ public class ArticleVo implements Serializable {
 
 	private List<ContentItemVo> content;
 	
-	private String crowd;
+	private CrowdVo crowds;
 	
-	private String scene;
+	private CrowdVo scenes;
 
 	private Integer votes;
 	
@@ -36,18 +36,18 @@ public class ArticleVo implements Serializable {
 	public ArticleVo() {
 	}
 	
-	@SuppressWarnings("unchecked")
 	public ArticleVo(Article article) {
 		this.id = article.getId();
 		this.title = article.getTitle();
-		this.crowd = article.getCrowd();
-		this.scene = article.getScene();
+		this.crowds = JsonUtils.parse(article.getCrowd(), CrowdVo.class);
+		this.scenes = JsonUtils.parse(article.getScene(), CrowdVo.class);
 		this.votes = article.getVotes();
 		this.status = article.getStatus();
 		this.author = article.getAuthor();
 		this.createDate = article.getCreateDate();
 		this.updateDate = article.getUpdateDate();
-		this.content = (List<ContentItemVo>) JSONUtils.parse(article.getContent());
+		this.content = JsonUtils.parse(article.getContent(), 
+				JsonUtils.getCollectionType(List.class, ContentItemVo.class));
 	}
 	
 	public Integer getId() {
@@ -74,20 +74,20 @@ public class ArticleVo implements Serializable {
 		this.content = content;
 	}
 
-	public String getCrowd() {
-		return crowd;
+	public CrowdVo getCrowds() {
+		return crowds;
 	}
 
-	public void setCrowd(String crowd) {
-		this.crowd = crowd;
+	public void setCrowds(CrowdVo crowds) {
+		this.crowds = crowds;
 	}
 
-	public String getScene() {
-		return scene;
+	public CrowdVo getScenes() {
+		return scenes;
 	}
 
-	public void setScene(String scene) {
-		this.scene = scene;
+	public void setScenes(CrowdVo scenes) {
+		this.scenes = scenes;
 	}
 
 	public Integer getVotes() {
@@ -151,8 +151,8 @@ public class ArticleVo implements Serializable {
 		sb.append(", author=").append(author);
 		sb.append(", createDate=").append(createDate);
 		sb.append(", updateDate=").append(updateDate);
-		sb.append(", crowd=").append(crowd);
-		sb.append(", scene=").append(scene);
+		sb.append(", crowds=").append(crowds);
+		sb.append(", scenes=").append(scenes);
 		sb.append(", serialVersionUID=").append(serialVersionUID);
 		sb.append("]");
 		return sb.toString();
