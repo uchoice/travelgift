@@ -44,6 +44,8 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Autowired
 	private ObjectMapper om;
+	
+	private Object LOCK = new Object();
 
 	@Override
 	public List<ArticleVo> findAll() {
@@ -109,18 +111,20 @@ public class ArticleServiceImpl implements ArticleService {
 			throw new ForbiddenRequestException("user: " + userId + " cannot vote article: " + article.getId()
 					+ " of user: " + article.getAuthor());
 		}
-		int count = voteHisMapper.selectCount(userId, articleId, DateUtils.todayZeroOclock());
-		if (count > 0) {
-			throw new ForbiddenRequestException("user: " + userId + " has voted: " + articleId + " today");
+		synchronized(LOCK) {
+			int count = voteHisMapper.selectCount(userId, articleId, DateUtils.todayZeroOclock());
+			if (count > 0) {
+				throw new ForbiddenRequestException("user: " + userId + " has voted: " + articleId + " today");
+			}
+			VoteHis voteHis = new VoteHis();
+			voteHis.setArticleId(articleId);
+			voteHis.setUserId(userId);
+			Date d = new Date();
+			voteHis.setVoteDate(d);
+			voteHis.setCreateDate(d);
+			voteHisMapper.insert(voteHis);
+			return articleMapper.updateVotes(articleId, 1) > 0;
 		}
-		VoteHis voteHis = new VoteHis();
-		voteHis.setArticleId(articleId);
-		voteHis.setUserId(userId);
-		Date d = new Date();
-		voteHis.setVoteDate(d);
-		voteHis.setCreateDate(d);
-		voteHisMapper.insert(voteHis);
-		return articleMapper.updateVotes(articleId, 1) > 0;
 	}
 
 	@Override

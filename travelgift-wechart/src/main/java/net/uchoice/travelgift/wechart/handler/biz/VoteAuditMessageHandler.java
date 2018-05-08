@@ -10,7 +10,6 @@ import org.springframework.util.StringUtils;
 import net.uchoice.travelgift.user.domain.UserDO;
 import net.uchoice.travelgift.user.exception.UserServiceException;
 import net.uchoice.travelgift.user.service.UserService;
-import net.uchoice.travelgift.vote.service.ArticleService;
 import net.uchoice.travelgift.wechart.handler.MessageHandler;
 import net.uchoice.travelgift.wechart.model.request.InputMessage;
 import net.uchoice.travelgift.wechart.model.response.BaseMessage;
@@ -37,9 +36,6 @@ public class VoteAuditMessageHandler implements MessageHandler {
 	
 	@Value("${wechart.adminUrl}")
 	String adminUrl;
-
-	@Autowired
-	ArticleService articleService;
 
 	@Override
 	public boolean isEffect(InputMessage message) {
